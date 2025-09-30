@@ -1,2 +1,0 @@
-# javaexercise4_bankaccount
-# javaexercise6_bankaccountadv

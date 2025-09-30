@@ -1,3 +1,4 @@
+//Code Reviewer: Cherlize Janelle Cuevas
 package bankaccount;
 
 import java.util.List;
@@ -17,6 +18,8 @@ public interface BankAccount {
     /** Checks whether the account is frozen.
      * @return status of the account*/
     boolean isFrozen();
-    
+    /** List of transaction history.
+     * @return a list of transaction history of the account
+     */
     List<Transaction> getTransactionHistory();
 }

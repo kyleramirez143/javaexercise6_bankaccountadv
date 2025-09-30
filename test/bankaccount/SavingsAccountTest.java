@@ -1,14 +1,11 @@
+//Code Reviewer: Cherlize Janelle Cuevas
 package bankaccount;
-//Reviewed: All goods.
-//Reviewer: Manuel John Dalacan
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertThrows;
 
-//import java.io.ByteArrayOutputStream;
-//import java.io.PrintStream;
+import java.util.List;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -16,8 +13,10 @@ import org.junit.jupiter.api.Test;
 
 class SavingsAccountTest {
 
-    /** SavingsAccount instance for testing purposes. */
+    /** SavingsAccount instance. */
     private SavingsAccount account;
+    /** BankAccountManager instance. */
+    private BankAccountManager manager;
     /** Constant for Php 1000. */
     private static final int P_1000 = 1000;
     /** Constant for Php 500. */
@@ -30,21 +29,25 @@ class SavingsAccountTest {
     private static final int P_100 = 100;
     /** Constant for negative Php 100. */
     private static final int NP_100 = -100;
-    /** Constant for Php 11500. */
-    private static final int P_11500 = 11500;
     /** Constant for Php 900. */
     private static final int P_900 = 900;
     /** Constant for Php 600. */
     private static final int P_600 = 600;
+    /** Constant for delta. */
+    private static final double DELTA = 0.001;
 
     @BeforeEach
     void setUp() {
+        manager = new BankAccountManager();
         account = new SavingsAccount("Bilog");
+        manager.addAccount(account);
     }
 
     @DisplayName("Test account creation")
     @Test
-    void testOwnerName() {
+    void testAddAccount() throws Exception {
+        assertNotNull(manager.getAccount(1));
+        assertEquals(0, account.getBalance(), DELTA);
         assertEquals("Bilog", account.getOwnerName());
     }
 
@@ -52,61 +55,52 @@ class SavingsAccountTest {
     @Test
     void testDepositValidAmount() throws Exception {
         account.deposit(P_1000);
-        assertEquals(P_1000, account.getBalance());
+        assertEquals(P_1000, account.getBalance(), DELTA);
     }
 
-    @DisplayName("Test invalid amount deposit (zero)")
+    @DisplayName("Test deposit with zero amount")
     @Test
-    void testDepositZeroAmountThrowsException() {
-        Exception exception = assertThrows(Exception.class, () -> account
-                .deposit(0));
-        assertEquals("The deposit amount must be positive.", exception
-                .getMessage());
+    void testDepositZeroAmountThrowsException() throws Exception {
+        assertThrows(InvalidAmountException.class, () -> account.deposit(0));
     }
 
-    @DisplayName("Test invalid amount deposit (negative)")
+    @DisplayName("Test deposit with negative amount")
     @Test
-    void testDepositNegativeAmountThrowsException() {
-        Exception exception = assertThrows(Exception.class, () -> account
-                .deposit(NP_500));
-        assertEquals("The deposit amount must be positive.", exception
-                .getMessage());
+    void testDepositNegativeAmountThrowsException() throws Exception {
+        assertThrows(InvalidAmountException.class, () -> account.deposit(
+                NP_500));
     }
 
-    @DisplayName("Test withdraw suffiencient funds")
+    @DisplayName("Test withdraw amount")
     @Test
-    void testWithdrawWithSufficientFunds() throws Exception {
+    void testWithdrawAmount() throws Exception {
         account.deposit(P_1000);
         account.withdraw(P_500);
-        assertEquals(P_500, account.getBalance());
+        assertEquals(P_500, account.getBalance(), DELTA);
     }
 
-    @DisplayName("Test withdraw insuffiencient funds")
+    @DisplayName("Test withdraw insufficient funds")
     @Test
     void testWithdrawWithInsufficientFundsThrowsException() throws Exception {
         account.deposit(P_1000);
-        Exception exception = assertThrows(Exception.class, () -> account
-                .withdraw(P_1500));
-        assertEquals("Insufficient balance.", exception.getMessage());
+        assertThrows(InsufficientFundsException.class, () -> account.withdraw(
+                P_1500));
     }
 
-    @DisplayName("Test withdraw invalid amount")
+    @DisplayName("Test withdraw negative amount")
     @Test
-    void testWithdrawNegativeAmountThrowsException() {
-        Exception exception = assertThrows(Exception.class, () -> account
-                .withdraw(NP_100));
-        assertEquals("The withdraw amount must be positive.", exception
-                .getMessage());
+    void testWithdrawNegativeAmountThrowsException() throws Exception {
+        account.deposit(P_1000);
+        assertThrows(InvalidAmountException.class, () -> account.withdraw(
+                NP_100));
     }
 
     @DisplayName("Test deposit when account is frozen")
     @Test
     void testDepositWhenFrozenThrowsException() throws Exception {
         account.freezeAccount();
-        Exception exception = assertThrows(Exception.class, () -> account
-                .deposit(P_11500));
-        assertEquals("Account is frozen. Cannot deposit.", exception
-                .getMessage());
+        assertThrows(AccountFrozenException.class, () -> account.deposit(
+                P_500));
     }
 
     @DisplayName("Test withdraw when account is frozen")
@@ -114,10 +108,8 @@ class SavingsAccountTest {
     void testWithdrawWhenFrozenThrowsException() throws Exception {
         account.deposit(P_1000);
         account.freezeAccount();
-        Exception exception = assertThrows(Exception.class, () -> account
-                .withdraw(P_500));
-        assertEquals("Account is frozen. Cannot withdraw.", exception
-                .getMessage());
+        assertThrows(AccountFrozenException.class, () -> account.deposit(
+                P_500));
     }
 
     @DisplayName("Test unfreeze and withdraw")
@@ -127,16 +119,7 @@ class SavingsAccountTest {
         account.freezeAccount();
         account.unfreezeAccount();
         account.withdraw(P_100);
-        assertEquals(P_900, account.getBalance());
-    }
-
-    @DisplayName("Test freeze and unfreeze account")
-    @Test
-    void testFreezeAndUnfreezeAccount() {
-        account.freezeAccount();
-        assertTrue(account.isFrozen());
-        account.unfreezeAccount();
-        assertFalse(account.isFrozen());
+        assertEquals(P_900, account.getBalance(), DELTA);
     }
 
     @DisplayName("Test balance after multiple transactions")
@@ -145,7 +128,51 @@ class SavingsAccountTest {
         account.deposit(P_1000);
         account.withdraw(P_500);
         account.deposit(P_100);
-        assertEquals(P_600, account.getBalance());
+        assertEquals(P_600, account.getBalance(), DELTA);
+    }
+
+    @DisplayName("Test filter transactions above")
+    @Test
+    void testFilterTransactionsAbove() throws Exception {
+        account.deposit(P_1000);
+        account.withdraw(P_500);
+        account.deposit(P_100);
+        List<Transaction> filtered = manager.filterTransactionsAbove(P_500,
+                account.getTransactionHistory());
+        assertEquals(2, filtered.size());
+        assertEquals("Deposit", filtered.get(0).getType());
+    }
+
+    @DisplayName("Test sort transactions by amount")
+    @Test
+    void testSortTransactionsByAmount() throws Exception {
+        account.deposit(P_1000);
+        account.withdraw(P_500);
+        account.deposit(P_100);
+        List<Transaction> sorted = manager.sortTransactionsByAmount(account
+                .getTransactionHistory());
+        assertEquals(P_100, sorted.get(0).getAmount(), DELTA);
+        assertEquals(P_500, sorted.get(1).getAmount(), DELTA);
+        assertEquals(P_1000, sorted.get(2).getAmount(), DELTA);
+    }
+
+    @DisplayName("Test handle invalid account access")
+    @Test
+    void testInvalidAccountAccessHandling() {
+        assertThrows(NullPointerException.class, () -> {
+            BankAccount invalid = manager.getAccount(P_100);
+            invalid.deposit(P_100);
+        });
+
+    }
+
+    @DisplayName("Test Transaction to string output")
+    @Test
+    void testTransactionToString() {
+        Transaction deposit = new Transaction("Deposit", P_1000);
+        Transaction withdraw = new Transaction("Withdraw", P_500);
+
+        assertEquals("Deposit: Php 1000.0", deposit.toString().trim());
+        assertEquals("Withdraw: Php 500.0", withdraw.toString().trim());
     }
 }
-

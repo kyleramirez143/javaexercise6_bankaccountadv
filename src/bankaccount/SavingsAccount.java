@@ -1,8 +1,12 @@
+//Code Reviewer: Cherlize Janelle Cuevas
 package bankaccount;
+
+//import java.util.List;
 
 public class SavingsAccount extends AbstractBankAccount {
     /** The name of the account owner. */
     private String ownerName;
+
     /**
      * Creates a new SavingsAccount for the specified owner.
      *
@@ -12,6 +16,7 @@ public class SavingsAccount extends AbstractBankAccount {
         super();
         this.ownerName = owner;
     }
+
     /**
      * Returns the name of the account owner.
      *
@@ -20,84 +25,63 @@ public class SavingsAccount extends AbstractBankAccount {
     public String getOwnerName() {
         return ownerName;
     }
-//    /**
-//     * Main method to test SavingsAccount functionality.
-//     *
-//     * @param args command line arguments
-//     */
-//    public static void main(final String[] args) {
-//        int p1000 = 1000;
-//        int p500 = 500;
-//        int np500 = -500;
-//        int p1500 = 1500;
-//        int p100 = 100;
-//        int np100 = -100;
-//        int p11500 = 11500;
-//        //Test 1: Create savings account
+
+    /**
+     * Main method to test SavingsAccount functionality.
+     *
+     * @param args command line arguments
+     */
+    public static void main(final String[] args) throws Exception {
+//        // Test case 1: Add savings account to BankAccountManager.
+//        BankAccountManager mngr = new BankAccountManager();
 //        SavingsAccount acc = new SavingsAccount("Bilog");
-//        System.out.println("Account name: " + acc.ownerName);
-//        //Test 2: Deposit with valid amount
-//        try {
-//            acc.deposit(p1000);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 3: Deposit with zero amount
-//        try {
-//            acc.deposit(0);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 4: Deposit with negative amount
-//        try {
-//            acc.deposit(np500);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 5: Withdraw with sufficient funds
-//        try {
-//            acc.withdraw(p500);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 6: Withdraw with insufficient funds
-//        try {
-//            acc.withdraw(p1500);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 7: Withdraw with negative amount
-//        try {
-//            acc.withdraw(np100);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 8: Deposit when account is frozen
-//        try {
-//            acc.freezeAccount();
-//            acc.deposit(p11500);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 9: Withdraw when account is frozen
-//        try {
-//            acc.withdraw(p500);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 10: Unfreeze account and withdraw
-//        try {
-//            acc.unfreezeAccount();
-//            acc.withdraw(p100);
-//        } catch (Exception e) {
-//            System.out.println(e.getMessage());
-//        }
-//        //Test 11: Check account is frozen
-//        System.out.println(acc.isFrozen());
-//        //Test 12: Check balance after multiple transactions
+//
+//        mngr.addAccount(acc);
+//        System.out.println("Account has been added. Balance: Php " + acc
+//                .getBalance());
+//
+//        // Test case 2: Deposit with valid amount.
+//        acc.deposit(1000);
+//
+//        // Test case 3: Deposit with zero amount.
+//         acc.deposit(0);
+//
+//        // Test case 4: Deposit with negative amount.
+//         acc.deposit(-500);
+//
+//        // Test case 5: Withdraw with sufficient funds.
+//        acc.withdraw(500);
+//
+//        // Test case 6: Withdraw with insufficient funds.
+//         acc.withdraw(1500);
+//
+//        // Test case 7: Withdraw with negative amount.
+//         acc.withdraw(-100);
+//
+//        // Test case 8: Deposit when account is frozen.
+//         acc.freezeAccount();
+//         acc.deposit(500);
+//
+//        // Test case 9: Withdraw when account is frozen.
+//         acc.freezeAccount();
+//         acc.withdraw(500);
+//
+//        // Test case 10: Unfreeze account and withdraw.
+//        acc.unfreezeAccount();
+//        acc.withdraw(100);
+//
+//        // Test case 11: Check balance after multiple transactions.
 //        System.out.println("Balance: Php " + acc.getBalance());
-//    }
-    
-   
+//
+//        // Test case 12: Check transaction history above 500.
+//        List<Transaction> history = acc.getTransactionHistory();
+//        mngr.filterTransactionsAbove(500, history)
+//        .forEach(System.out::println);s
+//        // Test case 13: Check transaction history sorted by amount.
+//        mngr.sortTransactionsByAmount(history).forEach(System.out::println);
+//        //Test case 14: Handle invalid account object access
+//        BankAccount invalid = mngr.getAccount(12);
+//        invalid.deposit(100);
+    }
 
 }
