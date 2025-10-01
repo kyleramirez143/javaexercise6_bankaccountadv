@@ -66,7 +66,7 @@ public abstract class AbstractBankAccount implements BankAccount {
                     "Account is frozen. Cannot deposit.");
         }
         if (amount <= 0) {
-            throw new InvalidAmountException("The deposit amount should ");
+            throw new InvalidAmountException("The deposit amount should be positive.");
         }
         if (amount > balance) {
             throw new InsufficientFundsException("Insufficient balance.");
